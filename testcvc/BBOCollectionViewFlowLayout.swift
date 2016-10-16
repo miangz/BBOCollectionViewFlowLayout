@@ -9,7 +9,7 @@
 import UIKit
 
 class BBOCollectionViewFlowLayout: UICollectionViewFlowLayout {
-  var numberOfDetailRow = 3
+  var numberOfDetailRow = 5
   var numberOfRowsPerData: Int {
     return (numberOfDetailRow + 1) * 4
   }

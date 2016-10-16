@@ -39,7 +39,10 @@ class BBOCollectionViewController: UICollectionViewController {
   }
   
   override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return 16
+    if let collectionViewLayout = collectionView.collectionViewLayout as? BBOCollectionViewFlowLayout {
+      return collectionViewLayout.numberOfRowsPerData
+    }
+    return 0
   }
   
   override func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
