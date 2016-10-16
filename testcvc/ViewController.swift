@@ -20,7 +20,7 @@ class BBOCollectionViewController: UICollectionViewController {
     layout.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10)
     if let collectionView = collectionView {
       collectionView.backgroundColor = UIColor.whiteColor()
-      collectionView.contentInset = UIEdgeInsetsMake(15, 80, 15, 80)
+      collectionView.contentInset = UIEdgeInsetsMake(15, 40, 15, 40)
       
       collectionView.registerNib(UINib.init(nibName: "CollectionViewHeader", bundle: nil), forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "CollectionViewHeader")
       collectionView.registerNib(UINib.init(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "CollectionViewCell")

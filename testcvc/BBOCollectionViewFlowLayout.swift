@@ -24,16 +24,18 @@ class BBOCollectionViewFlowLayout: UICollectionViewFlowLayout {
   
   override func collectionViewContentSize() -> CGSize {
     guard let collectionView = collectionView else { return CGSizeZero }
-    let height = (sectionInset.top + sectionInset.bottom + wholeDataSize.height)*CGFloat(collectionView.numberOfSections())
-    return CGSize(width: collectionView.bounds.width, height: max(height, collectionView.bounds.height))
+    let width = collectionView.bounds.width
+    let height = (sectionInset.top + sectionInset.bottom + wholeDataSize.height)*CGFloat(collectionView.numberOfSections()/Int(width/wholeDataSizeWithSectionInsect.width))
+    return CGSize(width: width - collectionView.contentInset.left - collectionView.contentInset.right, height: max(height, collectionView.bounds.height))
   }
   
   var maxY: CGFloat = 0
   var itemsAttributes: [UICollectionViewLayoutAttributes] = []
   var headersAttributes: [UICollectionViewLayoutAttributes] = []
   var footersAttributes: [UICollectionViewLayoutAttributes] = []
-  var numberOfColumn:Int {
-    return Int(collectionViewContentSize().width / wholeDataSizeWithSectionInsect.width)
+  var numberOfColumn: Int {
+    guard let collectionView = collectionView else { return 1 }
+    return Int((collectionView.bounds.size.width - collectionView.contentInset.left - collectionView.contentInset.right) / wholeDataSizeWithSectionInsect.width)
   }
   
   override func prepareLayout() {
@@ -53,12 +55,22 @@ class BBOCollectionViewFlowLayout: UICollectionViewFlowLayout {
       let sectionInset = self.sectionInset
       let itemCount = collectionView.numberOfItemsInSection(section)
       
-      var currentX = sectionInset.left + CGFloat(currentColumn) * headerSize.width
+      var currentX = sectionInset.left + CGFloat(currentColumn) * (headerSize.width + sectionInset.right)
       
       currentY += sectionInset.top
       if headerSize.height > 0 {
-        let attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withIndexPath: NSIndexPath(forItem: 0, inSection: section))
-        attributes.frame = CGRectMake(currentX, sectionInset.top + currentY, headerSize.width, headerSize.height)
+//        let attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withIndexPath: NSIndexPath(forItem: 0, inSection: section))
+//        attributes.frame = CGRectMake(currentX, sectionInset.top + currentY, headerSize.width, headerSize.height)
+        let indexPath = NSIndexPath(forItem: 0, inSection: section)
+        let attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withIndexPath: indexPath)
+        let size = headerReferenceSize
+        let column = section % numberOfColumn
+        let row = indexPath.section / numberOfColumn
+        let originX = sectionInset.left + (CGFloat(column) * self.wholeDataSizeWithSectionInsect.width)
+
+        let originY = (CGFloat(row) * wholeDataSizeWithSectionInsect.height) + sectionInset.top
+        attributes.frame = CGRectMake(originX, originY, size.width, size.height)
+        
         self.headersAttributes.append(attributes)
         currentY += headerSize.height
       }
@@ -66,17 +78,24 @@ class BBOCollectionViewFlowLayout: UICollectionViewFlowLayout {
       for itemIndex in 0...itemCount-1 {
         let indexPath = NSIndexPath(forItem: itemIndex, inSection: section)
         let size = self.itemSize
-        let attributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
-        attributes.frame = CGRectMake(currentX, currentY, size.width, size.height)
-        self.maxY = max(attributes.frame.origin.y + attributes.frame.size.height, self.maxY)
-        self.itemsAttributes.append(attributes)
+//        let attributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
+//        attributes.frame = CGRectMake(currentX, currentY, size.width, size.height)
+//        self.maxY = max(attributes.frame.origin.y + attributes.frame.size.height, self.maxY)
         
-        if (currentX+size.width >= ((CGFloat(currentColumn) + 1) * headerSize.width)) {
-          currentX = sectionInset.left + CGFloat(currentColumn) * headerSize.width
-          currentY += size.height + interitemSpacing
-        } else {
-          currentX += size.width
-        }
+        
+        let attributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
+        let column = section % numberOfColumn
+        let row = indexPath.section / numberOfColumn
+        let originX = sectionInset.left + (CGFloat(column) * self.wholeDataSizeWithSectionInsect.width) + (CGFloat(indexPath.row % 4) * size.width)
+        let originY = (CGFloat(row) * wholeDataSizeWithSectionInsect.height) + sectionInset.top + sectionInset.top + headerReferenceSize.height + (CGFloat(indexPath.row / 4) * size.height)
+        attributes.frame = CGRectMake(originX, originY, itemSize.width, itemSize.height)
+        self.itemsAttributes.append(attributes)
+//        if (currentX+size.width >= ((CGFloat(currentColumn) + 1) * headerSize.width)) {
+//          currentX = sectionInset.left + CGFloat(currentColumn) * (headerSize.width + sectionInset.right)
+//          currentY += size.height + interitemSpacing
+//        } else {
+//          currentX += size.width
+//        }
       }
       currentY += sectionInset.bottom
       
@@ -94,13 +113,13 @@ class BBOCollectionViewFlowLayout: UICollectionViewFlowLayout {
     return itemsAttributes[indexPath.row*indexPath.section]
     //    guard let collectionView = collectionView else { return nil }
     //
-    //    let attributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
-    //    let numberOfColumn = Int(collectionView.contentSize.width / wholeDataSizeWithSectionInsect.width)
-    //    let column = Int(collectionView.contentSize.width % wholeDataSizeWithSectionInsect.width)
-    //    let row = indexPath.section / numberOfColumn
-    //    let originX = CGFloat(column) * (wholeDataSizeWithSectionInsect.width) + sectionInset.left + CGFloat(indexPath.row % 4)
-    //    let originY = CGFloat(row) * wholeDataSizeWithSectionInsect.height + sectionInset.top + headerReferenceSize.height + CGFloat(indexPath.row / 4)
-    //    attributes.frame = CGRectMake(originX, originY, itemSize.width, itemSize.height)
+//        let attributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
+//        let numberOfColumn = Int(collectionView.contentSize.width / wholeDataSizeWithSectionInsect.width)
+//        let column = Int(collectionView.contentSize.width % wholeDataSizeWithSectionInsect.width)
+//        let row = indexPath.section / numberOfColumn
+//        let originX = CGFloat(column) * (wholeDataSizeWithSectionInsect.width) + sectionInset.left + CGFloat(indexPath.row % 4)
+//        let originY = CGFloat(row) * wholeDataSizeWithSectionInsect.height + sectionInset.top + headerReferenceSize.height + CGFloat(indexPath.row / 4)
+//        attributes.frame = CGRectMake(originX, originY, itemSize.width, itemSize.height)
     //
     //    return attributes
   }
@@ -109,14 +128,15 @@ class BBOCollectionViewFlowLayout: UICollectionViewFlowLayout {
     return headersAttributes[indexPath.section]
     //    guard let collectionView = collectionView else { return nil }
     //
-    //    let attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: elementKind, withIndexPath: indexPath)
-    //    let size = headerReferenceSize
-    //    let column = Int(collectionView.contentSize.width % size.width)
-    //    let row = indexPath.section / numberOfColumn
-    //    let originX = CGFloat(column) * (size.width + sectionInset.left + sectionInset.right) + sectionInset.left
-    //    let originY = CGFloat(row) * wholeDataSizeWithSectionInsect.height + sectionInset.top + headerReferenceSize.height
-    //    attributes.frame = CGRectMake(originX, originY, size.width, size.height)
-    //
+//    let attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withIndexPath: indexPath)
+//    let size = headerReferenceSize
+//    let column = indexPath.section % numberOfColumn
+//    let row = indexPath.section / numberOfColumn
+//    let originX = sectionInset.left + CGFloat(column) * (self.wholeDataSizeWithSectionInsect.width)
+//    
+//    let originY = CGFloat(row) * (wholeDataSizeWithSectionInsect.height) + sectionInset.top
+//    attributes.frame = CGRectMake(originX, originY, size.width, size.height)
+    
     //    return attributes
   }
   

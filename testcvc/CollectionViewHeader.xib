@@ -17,12 +17,22 @@
                     <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Twi-Ho-ZHT">
+                    <rect key="frame" x="201" y="0.0" width="1" height="50"/>
+                    <color key="backgroundColor" red="0.49803921579999999" green="0.49803921579999999" blue="0.49803921579999999" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="1" id="urr-sU-KYv"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="Twi-Ho-ZHT" firstAttribute="top" secondItem="WZ0-Id-Xkx" secondAttribute="top" id="3TB-rg-IV3"/>
                 <constraint firstAttribute="centerY" secondItem="odx-2U-Lxy" secondAttribute="centerY" id="8uX-HM-gRl"/>
+                <constraint firstAttribute="bottom" secondItem="Twi-Ho-ZHT" secondAttribute="bottom" id="TkH-2E-5HJ"/>
                 <constraint firstAttribute="trailing" secondItem="odx-2U-Lxy" secondAttribute="trailing" id="VbN-Y9-q7d"/>
                 <constraint firstItem="odx-2U-Lxy" firstAttribute="leading" secondItem="WZ0-Id-Xkx" secondAttribute="leading" id="hDH-zz-sw6"/>
+                <constraint firstAttribute="trailing" secondItem="Twi-Ho-ZHT" secondAttribute="trailing" id="kmh-br-Rcp"/>
             </constraints>
             <connections>
                 <outlet property="title" destination="odx-2U-Lxy" id="ifQ-ka-p47"/>

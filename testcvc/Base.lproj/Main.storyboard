@@ -9,7 +9,7 @@
         <scene sceneID="11c-38-jNh">
             <objects>
                 <collectionViewController id="5I3-9t-zjw" customClass="BBOCollectionViewController" customModule="testcvc" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="5Re-4g-pc5">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" dataMode="prototypes" id="5Re-4g-pc5">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <collectionViewLayout key="collectionViewLayout" id="Sci-LT-dQ2" customClass="BBOCollectionViewFlowLayout" customModule="testcvc" customModuleProvider="target"/>
